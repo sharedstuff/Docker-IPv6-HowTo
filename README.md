@@ -40,6 +40,7 @@ Goal is to split the /64 subnet to smaller subnets
   
 My personal split logic:  
 Prefix | Total IP Addresses | Split
+--- | --- | ---
 64 | 2^64 (18,446,744,073,709,551,616) | 64k x /80 subnets
 80 | 2^48 (281,474,976,710,656) | 64k x /96 subnets
 96 | 2^32 (4,294,967,296) | ~4k /112 subnets 
