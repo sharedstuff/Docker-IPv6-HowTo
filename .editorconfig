@@ -1,0 +1,4 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+[*.{json,json.*,code-workspace,yml,yaml}]
+indent_size = 2
