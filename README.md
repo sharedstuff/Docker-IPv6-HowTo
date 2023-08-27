@@ -74,7 +74,7 @@ fd00::a:0:0/96
   
 https://docs.docker.com/config/daemon/ipv6/  
   
-**Check: Local subnets used should all be unique and not overlapping.**
+**Check: Local subnets should all be unique and not overlapping!**
   
 Example Setup:  
   
