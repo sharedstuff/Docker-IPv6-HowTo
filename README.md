@@ -74,9 +74,17 @@ fd00::a:0:0/96
   
 https://docs.docker.com/config/daemon/ipv6/  
   
-**Check: Local subnets should all be unique and not overlapping!**
+**Check: Local subnets should all be unique and not overlapping!**  
   
-Example Setup:  
+**Important: At the moment this document is released IPv6 is still experimental**  
+  
+**Hint "mixed environments":**  
+I personally encountered problems in mixed environments.  
+Example: Traefik Network IPv6 with other networks still running in IPv4.  
+Above resulted in containers (sometimes/random!) not being able to reach each other.  
+Declaring all networks to v6 seems to do the trick!  
+  
+#### Example Setup  
   
 `fd00::1:0:0/96`  
 for the default bridge (fixed-cidr-v6)  
