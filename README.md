@@ -90,21 +90,21 @@ fd00::2:0/112 # split to /120
 `/etc/docker/daemon.json`  
 ```
 {
-    "ipv6": true,
-    "fixed-cidr": "172.16.0.0/16",
-    "fixed-cidr-v6": "fd00::1:0/112",
-    "experimental": true,
-    "ip6tables": true,
-    "default-address-pools": [
-        {
-            "base": "172.17.0.0/16",
-            "size": 24
-        },
-        {
-            "base": "fd00::2:0/112",
-            "size": 120
-        }
-    ]
+  "ipv6": true,
+  "fixed-cidr": "172.16.0.0/16",
+  "fixed-cidr-v6": "fd00::1:0/112",
+  "experimental": true,
+  "ip6tables": true,
+  "default-address-pools": [
+    {
+      "base": "172.17.0.0/16",
+      "size": 24
+    },
+    {
+      "base": "fd00::2:0/112",
+      "size": 120
+    }
+  ]
 }
 ```
   
