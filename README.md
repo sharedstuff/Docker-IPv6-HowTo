@@ -39,35 +39,20 @@ https://subnettingpractice.com/ipv6-subnet-calculator.html
 Goal is to split the /64 subnet to smaller subnets  
   
 My personal split logic:  
-Prefix | Total IP Addresses | Split
---- | --- | ---
-64 | 2^64 (18,446,744,073,709,551,616) | 64k x /80 subnets
-80 | 2^48 (281,474,976,710,656) | 64k x /96 subnets
-96 | 2^32 (4,294,967,296) | 64k x /112 subnets 
-112 | 2^12 (4,096) | -
-
-#### Subnetting fd00::/64 into /80s
-```
-Subnetting fd00::/64 into /80s gives 65536 subnets ...
-fd00::/80
-fd00::1:0:0:0/80
-fd00::2:0:0:0/80
-fd00::3:0:0:0/80
-...
-```
   
-#### Subnetting fd00::/80 into /96s
-```
-Subnetting fd00::/80 into /96s gives 65536 subnets ...
-fd00::/96
-fd00::1:0:0/96
-fd00::2:0:0/96
-fd00::3:0:0/96
-...
-fd00::a:0:0/96
-...
-```
- 
+IPv6 | Total IP Addresses | Split
+--- | --- | ---
+/64 | 2^64 (18,446,744,073,709,551,616) | 64k subnets of size /80
+/80 | 2^48 (281,474,976,710,656) | 64k subnets of size /96
+/96 | 2^32 (4,294,967,296) | -
+
+IPv6 | IPv4 | Total IP Addresses | Split
+--- | --- | --- | ---
+/96 | * | 2^32 (4,294,967,296) | 256 subnets of size /104 (IPv4:/8)
+/104 | /8 (x.*) | 2^24 (16,777,216) | 256 subnets of size /112 (IPv4:/16)
+/112 | /16 (x.x.*) | 2^16 (65,536) | 256 subnets of size /120 (IPv4:/24)
+/120 | /24 (x.x.x.*) | 2^8 (256) | -
+  
 ---
   
 ### Setup  
@@ -86,55 +71,39 @@ Declaring all networks to v6 seems to do the trick!
   
 #### Example Setup  
   
-`fd00::1:0:0/96`  
-for the default bridge (fixed-cidr-v6)  
+##### Default bridge  
+65,636 possible addresses in total (as 1 subnet)  
+```
+172.16.0.0/16
+fd00::1:0/112
+```
   
-`fd00::a:0:0/96`  
-for the docker daemon to derive other networks from (default-address-pools)  
+##### Default address pools
+65,636 possible addresses in total (split to 256 subnets)  
+```
+172.17.0.0/16 # split to /24
+fd00::2:0/112 # split to /120
+```
   
 ---
   
 `/etc/docker/daemon.json`  
-I also adjusted the size used for base: 192.168.0.0/16 from 20 to 24  
 ```
 {
     "ipv6": true,
-    "fixed-cidr-v6": "fd00::1:0:0/96",
+    "fixed-cidr": "172.16.0.0/16",
+    "fixed-cidr-v6": "fd00::1:0/112",
     "experimental": true,
     "ip6tables": true,
     "default-address-pools": [
         {
             "base": "172.17.0.0/16",
-            "size": 16
-        },
-        {
-            "base": "172.18.0.0/16",
-            "size": 16
-        },
-        {
-            "base": "172.19.0.0/16",
-            "size": 16
-        },
-        {
-            "base": "172.20.0.0/14",
-            "size": 16
-        },
-        {
-            "base": "172.24.0.0/14",
-            "size": 16
-        },
-        {
-            "base": "172.28.0.0/14",
-            "size": 16
-        },
-        {
-            "base": "192.168.0.0/16",
             "size": 24
         },
         {
-            "base": "fd00::a:0:0/96",
-            "size": 112
-        }        
+            "base": "fd00::2:0/112",
+            "size": 120
+        }
     ]
 }
 ```
@@ -152,14 +121,18 @@ networks:
   
 ## Links  
   
-### DNSChecker.org Local IPv6 Address Generator  
+### Reserved IP addresses  
+https://en.wikipedia.org/wiki/Reserved_IP_addresses  
+  
+### Docker IPv6 Official Documentation  
+https://docs.docker.com/config/daemon/ipv6/  
+  
+### Local IPv6 Address Generator  
 https://dnschecker.org/ipv6-address-generator.php  
   
-### Netgate Docs IPv6 Subnetting  
+### IPv6 Subnetting  
 https://docs.netgate.com/pfsense/en/latest/network/ipv6/subnets.html  
   
-### SubnettingPractice.com IPv6 Subnet Calculator  
+### IPv6 Subnet Calculator  
 https://subnettingpractice.com/ipv6-subnet-calculator.html  
   
-### Docker Official Documentation  
-https://docs.docker.com/config/daemon/ipv6/  
