@@ -1,11 +1,10 @@
 # Docker-IPv6-HowTo  
-a short straight-forward approach  
+a straight-forward approach  
   
-## HowTo  
   
----
+## Background: Local IPv6, Docker subnets, Subnetting IPv6  
   
-### Theory: Define a Local IPv6 subnet we want to use  
+### Define a local (private) IPv6 subnet  
   
 https://dnschecker.org/ipv6-address-generator.php  
   
@@ -27,12 +26,10 @@ IPv6 Address Format | fd00:0000:0000:0000:XXXX:XXXX:XXXX:XXXX
 Start Range | fd00:0000:0000:0000:0000:0000:0000:0000
 End Range | fd00:0000:0000:0000:ffff:ffff:ffff:ffff
 Block Size | 18446744073709551616
-
-That is 2^64 addresses - so we gonna split this next  
   
----
+That is 2^64 addresses  
   
-### Theory: Define Docker subnets / Subnetting IPv6
+### Define Docker subnets / Subnetting IPv6  
   
 https://subnettingpractice.com/ipv6-subnet-calculator.html  
   
@@ -53,9 +50,8 @@ IPv6 | IPv4 | Total IP Addresses | Split
 /112 | /16 (x.x.*) | 2^16 (65,536) | 256 subnets of size /120 (IPv4:/24)
 /120 | /24 (x.x.x.*) | 2^8 (256) | -
   
----
   
-### Setup  
+## Setup  
   
 https://docs.docker.com/config/daemon/ipv6/  
   
@@ -69,25 +65,7 @@ Example: Traefik Network IPv6 with other networks still running in IPv4.
 Above resulted in containers (sometimes/random!) not being able to reach each other.  
 Declaring all networks to v6 seems to do the trick!  
   
-#### Example Setup  
-  
-##### Default bridge  
-65,636 possible addresses in total (as 1 subnet)  
-```
-172.16.0.0/16
-fd00::1:0/112
-```
-  
-##### Default address pools
-65,636 possible addresses in total (split to 256 subnets)  
-```
-172.17.0.0/16 # split to /24
-fd00::2:0/112 # split to /120
-```
-  
----
-  
-`/etc/docker/daemon.json`  
+### /etc/docker/daemon.json
 ```
 {
   "ipv6": true,
@@ -108,16 +86,53 @@ fd00::2:0/112 # split to /120
 }
 ```
   
----
+#### Default bridge (fixed-cidr)  
+1 subnet - 65,636 addresses in total  
+```
+172.16.0.0/16 (65,536 addresses)  
+fd00::1:0/112 (65,536 addresses)  
+```
   
-`docker-compose.yml`:
+#### Default address pools (default-address-pools)  
+256 subnets x 256 addresses (65,636 addresses in total)
+```
+172.17.0.0/16 (65,536 addresses) split to /24 (256 addresses)  
+fd00::2:0/112 (65,536 addresses) split to /120 (256 addresses)  
+```
+  
+### docker-compose.yml  
 ```
 networks:
   name:
     enable_ipv6: true
 ```
   
----
+  
+## Additional networks  
+  
+### 1 subnet - 65,636 addresses in total  
+example:  
+```
+172.18.0.0/16
+fd00::3:0/112
+```
+```
+docker network create --ipv6 --subnet 172.18.0.0/16 --subnet fd00::3:0/112 networkname
+```
+  
+### 256 subnets x 256 addresses (65,636 addresses in total)  
+example:  
+```
+ 172.18.0.0/24,  172.18.1.0/24,    172.18.2.0/24 ...
+fd00::3:0/120,  fd00::3:100/120,  fd00::3:200/120 ...
+```
+```
+docker network create --ipv6 --subnet 172.18.0.0/24 --subnet fd00::3:0/120 networkname
+docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::3:100/120 networkname
+docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::3:200/120 networkname
+...
+```
+  
   
 ## Links  
   
@@ -135,4 +150,7 @@ https://docs.netgate.com/pfsense/en/latest/network/ipv6/subnets.html
   
 ### IPv6 Subnet Calculator  
 https://subnettingpractice.com/ipv6-subnet-calculator.html  
+  
+## IP(v4) Subnet Calculator  
+https://www.calculator.net/ip-subnet-calculator.html  
   
