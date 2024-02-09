@@ -90,14 +90,14 @@ Declaring all networks to v6 seems to do the trick!
 1 subnet - 65,636 addresses in total  
 ```
 172.16.0.0/16 (65,536 addresses)  
-fd00::1:0/112 (65,536 addresses)  
+fd00::16:0/112 (65,536 addresses)  
 ```
   
 #### Default address pools (default-address-pools)  
 256 subnets x 256 addresses (65,636 addresses in total)
 ```
 172.17.0.0/16 (65,536 addresses) split to /24 (256 addresses)  
-fd00::2:0/112 (65,536 addresses) split to /120 (256 addresses)  
+fd00::17:0/112 (65,536 addresses) split to /120 (256 addresses)  
 ```
   
 ### docker-compose.yml  
@@ -123,13 +123,13 @@ docker network create --ipv6 --subnet 172.18.0.0/16 --subnet fd00::18:0/112 netw
 ### 256 subnets x 256 addresses (65,636 addresses in total)  
 example:  
 ```
-  172.18.0.0/24,   172.18.1.0/24,   172.18.2.0/24 ...
-fd00::18:0/120,  fd00::18:1/120,  fd00::18:2/120 ...
+  172.18.0.0/24,   172.18.1.0/24,     172.18.2.0/24 ...
+fd00::18:0/120,  fd00::18:100/120,  fd00::18:200/120 ...
 ```
 ```
 docker network create --ipv6 --subnet 172.18.0.0/24 --subnet fd00::18:0/120 networkname
-docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::18:1/120 networkname
-docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::18:2/120 networkname
+docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::18:100/120 networkname
+docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::18:200/120 networkname
 ...
 ```
   
