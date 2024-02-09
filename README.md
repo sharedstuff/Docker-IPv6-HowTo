@@ -70,7 +70,7 @@ Declaring all networks to v6 seems to do the trick!
 {
   "ipv6": true,
   "fixed-cidr": "172.16.0.0/16",
-  "fixed-cidr-v6": "fd00::1:0/112",
+  "fixed-cidr-v6": "fd00::16:0/112",
   "experimental": true,
   "ip6tables": true,
   "default-address-pools": [
@@ -79,7 +79,7 @@ Declaring all networks to v6 seems to do the trick!
       "size": 24
     },
     {
-      "base": "fd00::2:0/112",
+      "base": "fd00::17:0/112",
       "size": 120
     }
   ]
@@ -114,22 +114,22 @@ networks:
 example:  
 ```
 172.18.0.0/16
-fd00::3:0/112
+fd00::18:0/112
 ```
 ```
-docker network create --ipv6 --subnet 172.18.0.0/16 --subnet fd00::3:0/112 networkname
+docker network create --ipv6 --subnet 172.18.0.0/16 --subnet fd00::18:0/112 networkname
 ```
   
 ### 256 subnets x 256 addresses (65,636 addresses in total)  
 example:  
 ```
  172.18.0.0/24,  172.18.1.0/24,    172.18.2.0/24 ...
-fd00::3:0/120,  fd00::3:100/120,  fd00::3:200/120 ...
+fd00::18:0/120,  fd00::18:100/120,  fd00::18:200/120 ...
 ```
 ```
-docker network create --ipv6 --subnet 172.18.0.0/24 --subnet fd00::3:0/120 networkname
-docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::3:100/120 networkname
-docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::3:200/120 networkname
+docker network create --ipv6 --subnet 172.18.0.0/24 --subnet fd00::18:0/120 networkname
+docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::18:100/120 networkname
+docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::18:200/120 networkname
 ...
 ```
   
