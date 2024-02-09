@@ -124,12 +124,12 @@ docker network create --ipv6 --subnet 172.18.0.0/16 --subnet fd00::18:0/112 netw
 example:  
 ```
  172.18.0.0/24,  172.18.1.0/24,    172.18.2.0/24 ...
-fd00::18:0/120,  fd00::18:100/120,  fd00::18:200/120 ...
+fd00::18:0/120,  fd00::18:1/120,  fd00::18:2/120 ...
 ```
 ```
 docker network create --ipv6 --subnet 172.18.0.0/24 --subnet fd00::18:0/120 networkname
-docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::18:100/120 networkname
-docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::18:200/120 networkname
+docker network create --ipv6 --subnet 172.18.1.0/24 --subnet fd00::18:1/120 networkname
+docker network create --ipv6 --subnet 172.18.2.0/24 --subnet fd00::18:2/120 networkname
 ...
 ```
   
